@@ -1,7 +1,7 @@
 #! ruby
 # -*- coding: utf-8 -*-
 
-require "auto_selecter"
+require "./auto_selecter"
 
 def puts_sentences sentences
   puts sentences.map{|s| s.to_s}.join("\n")
