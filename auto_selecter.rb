@@ -19,13 +19,15 @@ class AutoSelector
     @sentences = open(data_file, "r:utf-8").readlines[1..-1].map{|line|
        Sentence.new(line.chomp.split /\t/)
     }
-    kqset = Set.new
+    kqset = Set.new # Keyword - QuestionIDのセット列挙(重複除外)
+    keywords_of_question = Hash.new(0) # QuestionごとのKeyword数
     @sentences.each do |s|
       kq = { :k => s.keyword, :q => s.question }
       kqset << kq
+      keywords_of_question[s.question] += 1
     end
-    @kidqids = kqset.to_a
-    p @kidqids
+    # ランダムシャッフルした後，Keywordの少ない順に整列
+    @key_qid_pairs = kqset.to_a.shuffle.sort_by{|kq| keywords_of_question[kq[:q]]}
   end
 
   def auto_select questions, count
