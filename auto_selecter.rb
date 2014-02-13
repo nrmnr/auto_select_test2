@@ -76,7 +76,7 @@ class AutoSelector
     status2, selected2, overlap2 =
       detect selected, current_count, key_qid_pairs, index+1, question_needs
 
-    return detect selected, current_count, key_qid_pairs, index+1, question_needs
+    return status2, selected2, overlap2
   end
 
   def count_overlap selected
@@ -88,8 +88,8 @@ class AutoSelector
   end
 
   def detected? current_count, question_needs
-    question_needs.each do |q, needs|
-      return false if current_count[q] != needs
+    question_needs.keys.each do |q|
+      return false if current_count[q] != question_needs[q]
     end
     return true
   end
