@@ -7,6 +7,7 @@ def puts_sentences status, selected, overlap, detect_count
   unless status
     puts "not detected."
     puts "detect : #{detect_count}"
+    puts ("-" * 20)
     return
   end
 
