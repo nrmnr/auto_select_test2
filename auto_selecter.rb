@@ -64,21 +64,21 @@ class AutoSelector
     end
     key_qid = key_qid_pairs[index]
     return false, nil, nil if key_qid.nil?
-    qid = key_qid[:q]
-    return false, nil, nil if current_count[qid] >= question_needs[qid]
 
-    # 選ぶ
-    selected = current_selected + [key_qid]
-    current_count[qid] += 1
-    status1, selected1, overlap1 =
-      detect selected, current_count, key_qid_pairs, index+1, question_needs
-    return status1, selected1, overlap1 if status1
+    qid = key_qid[:q]
+    # 選ぶ - 既に必要数に達している場合は枝刈り
+    if current_count[qid] < question_needs[qid]
+      selected = current_selected + [key_qid]
+      current_count[qid] += 1
+      status1, selected1, overlap1 =
+        detect selected, current_count, key_qid_pairs, index+1, question_needs
+      current_count[qid] -= 1
+      return status1, selected1, overlap1 if status1
+    end
     # 選ばない
-    selected.pop
-    current_count[key_qid[:q]] -= 1
+    selected = current_selected.clone
     status2, selected2, overlap2 =
       detect selected, current_count, key_qid_pairs, index+1, question_needs
-
     return status2, selected2, overlap2
   end
 
