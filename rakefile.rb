@@ -4,11 +4,34 @@
 require "./auto_selecter"
 
 def puts_sentences status, selected, overlap
-  if status
-    puts overlap
-    puts selected.map{|s| s.to_s}.join(" / ")
-  else
+  unless status
     puts "not detected."
+    return
+  end
+
+  puts "overlaped : #{overlap}"
+  overlap = selected.inject(Hash.new(0)){|r, kq|
+    k = kq[:k]
+    r[k] += 1
+    r
+  }
+  questions = selected.inject({}){|r, kq|
+    k = kq[:k]
+    q = kq[:q]
+    r[q] ||= []
+    r[q] << k
+    r
+  }
+  questions.keys.sort.each do |q|
+    print "#{q} => "
+    print questions[q].map{|k|
+      if overlap[k] > 1
+        "*#{k}"
+      else
+        k
+      end
+    }.join(", ")
+    puts ""
   end
 end
 
