@@ -35,6 +35,7 @@ class AutoSelector
       questions.include? kq[:q]
     }.shuffle.sort_by{|kq|
       @keywords_of_question[kq[:q]]
+      # -@keywords_of_question[kq[:q]] # Keywordの多い順
     }
 
     # Keyword列挙
