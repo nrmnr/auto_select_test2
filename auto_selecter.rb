@@ -72,8 +72,8 @@ class AutoSelector
       current_count[qid] += 1
       status1, selected1, overlap1 =
         detect selected, current_count, key_qid_pairs, index+1, question_needs
-      current_count[qid] -= 1
       return status1, selected1, overlap1 if status1
+      current_count[qid] -= 1
     end
     # 選ばない
     selected = current_selected.clone
