@@ -20,23 +20,65 @@ class AutoSelector
        Sentence.new(line.chomp.split /\t/)
     }
     kqset = Set.new # Keyword - QuestionIDのセット列挙(重複除外)
-    keywords_of_question = Hash.new(0) # QuestionごとのKeyword数
+    @keywords_of_question = Hash.new(0) # QuestionごとのKeyword数
     @sentences.each do |s|
       kq = { :k => s.keyword, :q => s.question }
       kqset << kq
-      keywords_of_question[s.question] += 1
+      @keywords_of_question[s.question] += 1
     end
-    # ランダムシャッフルした後，Keywordの少ない順に整列
-    @key_qid_pairs = kqset.to_a.shuffle.sort_by{|kq| keywords_of_question[kq[:q]]}
+    @key_qid_pairs = kqset.to_a
   end
 
-  def auto_select questions, count
-    def auto_select_sub result, sentences, count
-      return result
+  def auto_select questions, needs
+    # ランダムシャッフルした後，Keywordの少ない順に整列
+    key_qid_pairs = @key_qid_pairs.select{|kq|
+      questions.include? kq[:q]
+    }.shuffle.sort_by{|kq|
+      @keywords_of_question[kq[:q]]
+    }
+    question_needs = questions.zip(needs).inject({}){|r, a| r[a[0]] = a[1]; r}
+    status, selected, overlap = detect([], Hash.new(0), key_qid_pairs, 0, question_needs)
+    return status, selected, overlap
+  end
+
+  def detect current_selected, current_count, key_qid_pairs, index, question_needs
+    overlap = count_overlap current_selected
+    if judge current_count, question_needs
+      return true, current_selected, overlap
     end
-    sentences = @sentences.select{|s| questions.include? s.question}.shuffle
-    result = auto_select_sub({}, sentences, count)
-    return result.values.flatten
+    key_qid = key_qid_pairs[index]
+    return false, nil, nil if key_qid.nil?
+    qid = key_qid[:q]
+    return false, nil, nil if current_count[qid] >= question_needs[qid]
+
+    # 選ぶ
+    selected = current_selected + [key_qid]
+    current_count[qid] += 1
+    status1, selected1, overlap1 =
+      detect selected, current_count, key_qid_pairs, index+1, question_needs
+    return status1, selected1, overlap1 if status1
+    # 選ばない
+    selected.pop
+    current_count[key_qid[:q]] -= 1
+    status2, selected2, overlap2 =
+      detect selected, current_count, key_qid_pairs, index+1, question_needs
+
+    return detect selected, current_count, key_qid_pairs, index+1, question_needs
+  end
+
+  def count_overlap selected
+    counts = selected.inject(Hash.new(0)){|r, kq|
+      r[kq[:k]] += 1
+      r
+    }
+    return counts.keys.count{|k| counts[k] > 1}
+  end
+
+  def judge current_count, question_needs
+    question_needs.each do |q, needs|
+      return false if current_count[q] < needs
+    end
+    return true
   end
 end
 
