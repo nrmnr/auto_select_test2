@@ -36,15 +36,26 @@ class AutoSelector
     }.shuffle.sort_by{|kq|
       @keywords_of_question[kq[:q]]
     }
+
+    # Keyword列挙
+    keywords = key_qid_pairs.inject(Set.new){|r, kq| r << kq[:k]; r}.to_a
+    # 必要数合計
+    needs_amount = needs.inject(:+)
+    # オーバーラップ最小値
+    @overlap_min = (keywords.size < needs_amount)? (needs_amount - keywords.size) : 0
+    # 設問ごと必要数
     question_needs = questions.zip(needs).inject({}){|r, a| r[a[0]] = a[1]; r}
+    # 探索
     status, selected, overlap = detect([], Hash.new(0), key_qid_pairs, 0, question_needs)
     return status, selected, overlap
   end
 
   def detect current_selected, current_count, key_qid_pairs, index, question_needs
+    # 重複数チェック - 枝刈り
     overlap = count_overlap current_selected
+    return false, nil, nil if overlap > @overlap_min
     if judge current_count, question_needs
-      return true, current_selected, overlap
+      return (overlap <= @overlap_min), current_selected, overlap
     end
     key_qid = key_qid_pairs[index]
     return false, nil, nil if key_qid.nil?
