@@ -45,4 +45,5 @@ task :default do
   puts_sentences(*(rs.auto_select [1002,1004], [5,3]))
   puts_sentences(*(rs.auto_select [1001,1002], [5,5]))
   puts_sentences(*(rs.auto_select [1003,1004], [5,3]))
+  puts_sentences(*(rs.auto_select [1001,1003,1004], [4,4,3]))
 end
