@@ -47,11 +47,13 @@ class AutoSelector
     # 設問ごと必要数
     question_needs = questions.zip(needs).inject({}){|r, a| r[a[0]] = a[1]; r}
     # 探索
+    @detect_count = 0
     status, selected, overlap = detect([], Hash.new(0), key_qid_pairs, 0, question_needs)
-    return status, selected, overlap
+    return status, selected, overlap, @detect_count
   end
 
   def detect current_selected, current_count, key_qid_pairs, index, question_needs
+    @detect_count += 1
     # 重複数チェック - 枝刈り
     overlap = count_overlap current_selected
     return false, nil, nil if overlap > @overlap_min

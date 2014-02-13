@@ -3,9 +3,10 @@
 
 require "./auto_selecter"
 
-def puts_sentences status, selected, overlap
+def puts_sentences status, selected, overlap, detect_count
   unless status
     puts "not detected."
+    puts "detect : #{detect_count}"
     return
   end
 
@@ -33,6 +34,8 @@ def puts_sentences status, selected, overlap
     }.join(", ")
     puts ""
   end
+  puts "detect : #{detect_count}"
+  puts ("-" * 20)
 end
 
 task :default do
