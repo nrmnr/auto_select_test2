@@ -25,9 +25,3 @@ id	keyword	question	sentence
 82	word8	1002	word8 of 1002
 91	word9	1001	word9 of 1001
 92	word9	1002	word9 of 1002
-101	word10	1001	word10 of 1001
-103	word10	1003	word10 of 1003
-111	word11	1001	word11 of 1001
-113	word11	1003	word11 of 1003
-121	word12	1001	word12 of 1001
-123	word12	1003	word12 of 1003
