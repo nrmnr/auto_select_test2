@@ -43,6 +43,7 @@ class AutoSelector
     needs_amount = needs.inject(:+)
     # オーバーラップ最小値
     @overlap_min = (keywords.size < needs_amount)? (needs_amount - keywords.size) : 0
+    puts "overlap min:#{@overlap_min}"
     # 設問ごと必要数
     question_needs = questions.zip(needs).inject({}){|r, a| r[a[0]] = a[1]; r}
     # 探索
@@ -54,7 +55,8 @@ class AutoSelector
     # 重複数チェック - 枝刈り
     overlap = count_overlap current_selected
     return false, nil, nil if overlap > @overlap_min
-    if judge current_count, question_needs
+
+    if detected? current_count, question_needs
       return (overlap <= @overlap_min), current_selected, overlap
     end
     key_qid = key_qid_pairs[index]
@@ -85,9 +87,9 @@ class AutoSelector
     return counts.keys.count{|k| counts[k] > 1}
   end
 
-  def judge current_count, question_needs
+  def detected? current_count, question_needs
     question_needs.each do |q, needs|
-      return false if current_count[q] < needs
+      return false if current_count[q] != needs
     end
     return true
   end
