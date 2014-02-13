@@ -30,7 +30,7 @@ def puts_sentences status, selected, overlap, detect_count
       if overlap[k] > 1
         "*#{k}"
       else
-        k
+        " #{k}"
       end
     }.join(", ")
     puts ""
