@@ -2,12 +2,15 @@ id	keyword	question	sentence
 11	word1	1001	word1 of 1001
 12	word1	1002	word1 of 1002
 13	word1	1003	word1 of 1003
+14	word1	1004	word1 of 1004
 21	word2	1001	word2 of 1001
 22	word2	1002	word2 of 1002
 23	word2	1003	word2 of 1003
+24	word2	1004	word2 of 1004
 31	word3	1001	word3 of 1001
 32	word3	1002	word3 of 1002
 33	word3	1003	word3 of 1003
+34	word3	1004	word3 of 1004
 41	word4	1001	word4 of 1001
 42	word4	1002	word4 of 1002
 43	word4	1003	word4 of 1003
@@ -28,8 +31,3 @@ id	keyword	question	sentence
 113	word11	1003	word11 of 1003
 121	word12	1001	word12 of 1001
 123	word12	1003	word12 of 1003
-134	word13	1004	word13 of 1004
-144	word14	1004	word14 of 1004
-154	word15	1004	word15 of 1004
-164	word16	1004	word16 of 1004
-174	word17	1004	word17 of 1004
